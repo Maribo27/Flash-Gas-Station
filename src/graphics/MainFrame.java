@@ -1,5 +1,7 @@
 package graphics;
 
+import controller.GasStation;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -8,8 +10,10 @@ import java.awt.*;
  */
 public class MainFrame {
     private JFrame frame = new JFrame("Gas Station");
+    private GasStation controller;
 
-    public MainFrame(){
+    public MainFrame(GasStation controller){
+        this.controller = controller;
         JButton startGame = new JButton("Старт");
         JButton exit = new JButton("Выход");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -32,7 +36,7 @@ public class MainFrame {
 
         startGame.addActionListener(e -> {
             frame.dispose();
-            GameField newGame = new GameField();
+            GameField newGame = new GameField(controller);
             frame = newGame.getFrame();
         });
         exit.addActionListener(e -> {
