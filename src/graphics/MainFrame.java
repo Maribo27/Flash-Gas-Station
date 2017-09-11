@@ -18,19 +18,19 @@ public class MainFrame {
         JButton exit = new JButton("Выход");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.setSize(new Dimension(800,617));
+        frame.setSize(new Dimension(565,825));
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setContentPane(new Background(0));
         Container container = frame.getContentPane();
-        container.setLayout(new FlowLayout());
+        container.setLayout(new BorderLayout());
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.add(startGame);
         buttonPanel.add(exit);
-        buttonPanel.setOpaque(true);
-        frame.add(buttonPanel);
+        buttonPanel.setOpaque(false);
+        frame.add(buttonPanel, BorderLayout.EAST);
 
         frame.setVisible(true);
 

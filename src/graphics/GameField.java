@@ -17,12 +17,14 @@ class GameField {
         frame = new JFrame("Gas Station");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.setSize(new Dimension(1200,1024));
+        frame.setSize(new Dimension(1200,675));
         frame.setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setSize(new Dimension(176,1024));
+        mainPanel.setSize(new Dimension(150,675));
+        mainPanel.setPreferredSize(new Dimension(150,675));
+        mainPanel.setMinimumSize(new Dimension(150,675));
         mainPanel.add(new JLabel("Очередь машин:"));
 
         JPanel topPanel = new JPanel();
@@ -53,14 +55,31 @@ class GameField {
 
         JPanel shopPanel = new JPanel();
         shopPanel.setLayout(new FlowLayout());
-        shopPanel.setSize(new Dimension(150,1024));
-        shopPanel.setPreferredSize(new Dimension(150,1024));
-        shopPanel.setMinimumSize(new Dimension(150,1024));
+        shopPanel.setSize(new Dimension(125,675));
+        shopPanel.setPreferredSize(new Dimension(125,675));
+        shopPanel.setMinimumSize(new Dimension(125,675));
         shopPanel.add(new JLabel("Магазин:"));
 
         frame.setContentPane(new Background(1));
         Container container1 = frame.getContentPane();
         container1.setLayout(new BorderLayout());
+
+        JButton thing1, thing2, food1, food2;
+
+        thing1 = new JButton(Images.THING1);
+        thing2 = new JButton(Images.THING2);
+        food1 = new JButton(Images.FOOD1);
+        food2 = new JButton(Images.FOOD2);
+
+        shopPanel.add(thing1);
+        shopPanel.add(thing2);
+        shopPanel.add(food1);
+        shopPanel.add(food2);
+
+
+        mainPanel.setOpaque(false);
+        topPanel.setOpaque(false);
+        shopPanel.setOpaque(false);
         frame.add(mainPanel, BorderLayout.EAST);
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(shopPanel, BorderLayout.WEST);
