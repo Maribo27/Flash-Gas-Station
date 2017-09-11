@@ -12,6 +12,7 @@ class GameField {
     private JFrame frame = new JFrame("Gas Station");
     private GasStation controller;
     private int currentGoal = 0;
+    private Game game = new Game();
     GameField(GasStation controller){
         this.controller = controller;
         frame = new JFrame("Gas Station");
@@ -83,6 +84,12 @@ class GameField {
         frame.add(mainPanel, BorderLayout.EAST);
         frame.add(topPanel, BorderLayout.NORTH);
         frame.add(shopPanel, BorderLayout.WEST);
+
+        ImageIcon flash = Images.PERSON;
+
+        game.canvas.setPreferredSize(new Dimension(flash.getIconWidth(), flash.getIconHeight()));
+        frame.add(game.canvas, BorderLayout.SOUTH);
+        game.start();
         frame.setVisible(true);
     }
 

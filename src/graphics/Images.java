@@ -16,6 +16,6 @@ class Images {
     static ImageIcon THING1 = new ImageIcon("pics\\thing1.png");
     static ImageIcon THING2 = new ImageIcon("pics\\thing2.png");
     static ImageIcon PUMP1 = new ImageIcon("pics\\pump1.png");
-    static ImageIcon PERSON = new ImageIcon("pics\\man.png");
+    static ImageIcon PERSON = new ImageIcon("pics\\flash.png");
     static ImageIcon PUMP2 = new ImageIcon("pics\\pump2.png");
 }
