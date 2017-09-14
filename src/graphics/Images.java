@@ -7,7 +7,7 @@ import javax.swing.*;
  */
 class Images {
     static String MAIN_BACKGROUND = "pics\\main.png";
-    static String GAME_BACKGROUND = "pics\\game.png";
+    static String GAME_BACKGROUND = "pics\\background.jpg";
     static ImageIcon CAR1 = new ImageIcon("pics\\car1.png");
     static ImageIcon CAR2 = new ImageIcon("pics\\car2.png");
     static ImageIcon END = new ImageIcon("pics\\end.png");

@@ -11,7 +11,7 @@ public class GasStation {
     private GameProgress model;
     public GasStation(){
         view = new MainFrame(this);
-        model = new GameProgress(1, 12, 200, this);
+        model = new GameProgress(this);
     }
 
     public int getLevel(){
@@ -22,6 +22,26 @@ public class GasStation {
     }
     public int getCarNumbers(){
         return model.getCarNumbers();
+    }
+    public int getCountOfPumps(){return model.getCountOfPumps();}
+    public int getFlashSpeed(){
+        return model.getFlashSpeed();
+    }
+    public int getPumpSpeed(){
+        return model.getPumpSpeed();
+    }
+    public int getPatience(){
+        return model.getPatience();
+    }
+    public String getDescription(){return model.getDescription();}
+    public void increaseFlashSpeed(){
+        model.increaseFlashSpeed();
+    }
+    public void increasePumpSpeed(){
+        model.increasePumpSpeed();
+    }
+    public void increasePatience(){
+        model.increasePatience();
     }
     public void increaseLevel(){
         model.increaseLevel();

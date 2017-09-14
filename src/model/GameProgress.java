@@ -6,20 +6,36 @@ import controller.GasStation;
  * Created by Maria on 09.09.2017.
  */
 public class GameProgress {
-    private int level, cars, goal;
     private GasStation controller;
-    public GameProgress(int level, int cars, int goal, GasStation controller){
-        this.level = level;
-        this.cars = cars;
+    private Characteristics characteristics = new Characteristics();
+    private Level levelInfo = new Level();
+
+    public GameProgress(GasStation controller){
         this.controller = controller;
-        this.goal = goal;
+        characteristics = new Characteristics();
+        levelInfo = new Level();
     }
-    public int getLevel(){return level;}
-    public int getGoal(){return goal;}
-    public int getCarNumbers(){return cars;}
+
+    public int getLevel(){return levelInfo.currentLevel;}
+    public int getGoal(){return levelInfo.goal;}
+    public int getCarNumbers(){return levelInfo.countOfCars;}
+    public int getCountOfPumps(){return levelInfo.countOfPumps;}
+    public int getFlashSpeed(){return characteristics.FlashSpeed;}
+    public int getPumpSpeed(){return characteristics.pumpSpeed;}
+    public int getPatience(){return characteristics.patience;}
+    public String getDescription(){return levelInfo.description;}
+
+    public void increaseFlashSpeed(){
+        characteristics.FlashSpeed++;
+    }
+    public void increasePumpSpeed(){
+        characteristics.pumpSpeed++;
+    }
+    public void increasePatience(){
+        characteristics.patience++;
+    }
+
     public void increaseLevel(){
-        level++;
-        cars += 5;
-        goal += 100;
+        levelInfo.increaseLevel();
     }
 }
