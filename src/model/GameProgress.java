@@ -38,4 +38,12 @@ public class GameProgress {
     public void increaseLevel(){
         levelInfo.increaseLevel();
     }
+
+    public int getCurrentThing(){
+        return characteristics.currentThing;
+    }
+
+    public void changeThing(int count){
+        characteristics.changeThing(count);
+    }
 }

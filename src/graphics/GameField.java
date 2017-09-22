@@ -13,11 +13,12 @@ class GameField {
     private GasStation controller;
     private int currentGoal = 0;
     private JPanel shopPanel, mainPanel, topPanel;
+    private GameCanvas gameCanvas;
     GameField(GasStation controller){
         this.controller = controller;
         initFrame();
         initPanels();
-        GameCanvas gameCanvas = new GameCanvas();
+        gameCanvas = new GameCanvas(controller);
         frame.add(gameCanvas.canvas, BorderLayout.CENTER);
         gameCanvas.start();
         frame.setVisible(true);
@@ -31,6 +32,7 @@ class GameField {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setContentPane(new Background(1));
+        frame.setIconImage(Images.ICON.getImage());
         Container container1 = frame.getContentPane();
         container1.setLayout(new BorderLayout());
     }
@@ -86,9 +88,33 @@ class GameField {
         shopPanel.add(new JLabel("Магазин:"));
 
         thing1 = new JButton(Images.THING1);
+        thing1.addActionListener(e -> {
+           if (controller.getCurrentThing() == 0) {
+               controller.changeThing(1);
+               gameCanvas.changePosition(-104);
+           }
+        });
         thing2 = new JButton(Images.THING2);
+        thing2.addActionListener(e -> {
+            if (controller.getCurrentThing() == 0) {
+                controller.changeThing(2);
+                gameCanvas.changePosition(-104);
+            }
+        });
         food1 = new JButton(Images.FOOD1);
+        food1.addActionListener(e -> {
+            if (controller.getCurrentThing() == 0) {
+                controller.changeThing(3);
+                gameCanvas.changePosition(-104);
+            }
+        });
         food2 = new JButton(Images.FOOD2);
+        food2.addActionListener(e -> {
+            if (controller.getCurrentThing() == 0) {
+                controller.changeThing(4);
+                gameCanvas.changePosition(-104);
+            }
+        });
 
         shopPanel.add(thing1);
         shopPanel.add(thing2);

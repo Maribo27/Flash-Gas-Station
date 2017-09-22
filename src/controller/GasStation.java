@@ -46,4 +46,12 @@ public class GasStation {
     public void increaseLevel(){
         model.increaseLevel();
     }
+
+    public int getCurrentThing(){
+        return model.getCurrentThing();
+    }
+
+    public void changeThing(int count){
+        model.changeThing(count);
+    }
 }

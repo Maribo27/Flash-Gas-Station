@@ -23,6 +23,7 @@ public class MainFrame {
         frame.setSize(new Dimension(565,825));
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+        frame.setIconImage(Images.ICON.getImage());
         frame.setContentPane(new Background(0));
         Container container = frame.getContentPane();
         container.setLayout(new BorderLayout());
@@ -62,5 +63,7 @@ public class MainFrame {
             storeFrame.setResizable(false);
             storeFrame.setVisible(true);
         });
+
+
     }
 }
