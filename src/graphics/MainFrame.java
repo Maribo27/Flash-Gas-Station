@@ -63,7 +63,5 @@ public class MainFrame {
             storeFrame.setResizable(false);
             storeFrame.setVisible(true);
         });
-
-
     }
 }

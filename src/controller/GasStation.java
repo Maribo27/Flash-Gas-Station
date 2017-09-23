@@ -24,7 +24,7 @@ public class GasStation {
         return model.getCarNumbers();
     }
     public int getCountOfPumps(){return model.getCountOfPumps();}
-    public int getFlashSpeed(){
+    /*public int getFlashSpeed(){
         return model.getFlashSpeed();
     }
     public int getPumpSpeed(){
@@ -45,7 +45,7 @@ public class GasStation {
     }
     public void increaseLevel(){
         model.increaseLevel();
-    }
+    }*/
 
     public int getCurrentThing(){
         return model.getCurrentThing();

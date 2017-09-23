@@ -13,6 +13,10 @@ import java.io.*;
  */
 public class GameCanvas implements Runnable {
 
+	public static final int BATARANG = 1;
+	public static final int STEERING_WHEEL = 2;
+	public static final int FASTFOOD = 3;
+	public static final int COFFEE = 4;
 	private GasStation controller;
 	Canvas canvas = new Canvas();
 	private int newPosition;
@@ -53,17 +57,17 @@ public class GameCanvas implements Runnable {
 	
 	private void render() {
 		switch (things){
-			case 1:
-				thing = getImage(Images.THING1.toString());
+			case BATARANG:
+				thing = getImage(Thing.BATARANG);
 				break;
-			case 2:
-				thing = getImage(Images.THING2.toString());
+			case STEERING_WHEEL:
+				thing = getImage(Thing.STEERING_WHEEL);
 				break;
-			case 3:
-				thing = getImage(Images.FOOD1.toString());
+			case FASTFOOD:
+				thing = getImage(Thing.FASTFOOD);
 				break;
-			case 4:
-				thing = getImage(Images.FOOD2.toString());
+			case COFFEE:
+				thing = getImage(Thing.COFFEE);
 				break;
 		}
 		BufferStrategy bs = canvas.getBufferStrategy();
@@ -99,7 +103,11 @@ public class GameCanvas implements Runnable {
 			cord_X++;
 			leftPressed = false;
 		}
-		if (things != 0 && cord_X == - flash.getWidth()) isThing = true;
+		if (cord_X == - flash.getWidth()) {
+			things = controller.getCurrentThing();
+			if (things != 0) isThing = true;
+			else isThing = false;
+		}
 	}
 
 	private ImageDraw getImage(String path) {
@@ -111,7 +119,7 @@ public class GameCanvas implements Runnable {
 			e.printStackTrace();
 		}
 
-        assert sourceImage != null;
+        //assert sourceImage != null;
 
         return new ImageDraw(Toolkit.getDefaultToolkit().createImage(sourceImage.getSource()));
 	}
@@ -122,13 +130,13 @@ public class GameCanvas implements Runnable {
 
 			if (smallCord) return;
 			newPosition = event.getX();
-			if (newPosition > cord_X) newPosition -= flash.getWidth();
+			if (newPosition != cord_X) newPosition -= flash.getWidth() / 2;
         }
     }
 
     void changePosition(int newCord){
 		newPosition = newCord;
-		this.things = controller.getCurrentThing();
+		things = 0;
 		if (newPosition > cord_X) newPosition -= flash.getWidth();
 		render();
 		update();

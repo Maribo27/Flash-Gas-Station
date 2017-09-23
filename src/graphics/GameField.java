@@ -39,7 +39,7 @@ class GameField {
 
     private void initPanels(){
         JLabel levelLabel, goalLabel, carsLabel;
-        JButton pauseButton, thing1, thing2, food1, food2;
+        JButton pauseButton, batarang, steeringWheel, fastFood, coffee;
 
         //панель очереди машин
         mainPanel = new JPanel();
@@ -49,6 +49,23 @@ class GameField {
         mainPanel.setMinimumSize(new Dimension(150,675));
         mainPanel.add(new JLabel("Очередь машин:"));
         mainPanel.setOpaque(false);
+
+        JPanel carsPanel = new JPanel();
+        carsPanel.setLayout(new BoxLayout(carsPanel, BoxLayout.Y_AXIS));
+        for (int counterOfCarsButton = 0; counterOfCarsButton < controller.getCarNumbers(); counterOfCarsButton++) {
+            carsPanel.add(new JButton(counterOfCarsButton + "", Images.CAR));
+        }
+        for (int counter = 0; counter < carsPanel.getComponentCount(); counter++)
+        {
+            carsPanel.getComponent(counter).setEnabled(false);
+            ((JButton)carsPanel.getComponent(counter)).setContentAreaFilled(false);
+        }
+
+        carsPanel.setOpaque(false);
+        JScrollPane scrollCarPanel = new JScrollPane(carsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollCarPanel.setOpaque(false);
+        scrollCarPanel.getViewport().setOpaque(false);
+        mainPanel.add(scrollCarPanel);
 
 
         //панель уровня
@@ -87,39 +104,35 @@ class GameField {
         shopPanel.setMinimumSize(new Dimension(125,675));
         shopPanel.add(new JLabel("Магазин:"));
 
-        thing1 = new JButton(Images.THING1);
-        thing1.addActionListener(e -> {
-           if (controller.getCurrentThing() == 0) {
+        batarang = new JButton(new ImageIcon(Thing.BATARANG));
+        batarang.addActionListener(e -> {
                controller.changeThing(1);
                gameCanvas.changePosition(-104);
-           }
         });
-        thing2 = new JButton(Images.THING2);
-        thing2.addActionListener(e -> {
-            if (controller.getCurrentThing() == 0) {
+        batarang.setContentAreaFilled(false);
+        steeringWheel = new JButton(new ImageIcon(Thing.STEERING_WHEEL));
+        steeringWheel.addActionListener(e -> {
                 controller.changeThing(2);
                 gameCanvas.changePosition(-104);
-            }
         });
-        food1 = new JButton(Images.FOOD1);
-        food1.addActionListener(e -> {
-            if (controller.getCurrentThing() == 0) {
+        steeringWheel.setContentAreaFilled(false);
+        fastFood = new JButton(new ImageIcon(Thing.FASTFOOD));
+        fastFood.addActionListener(e -> {
                 controller.changeThing(3);
                 gameCanvas.changePosition(-104);
-            }
         });
-        food2 = new JButton(Images.FOOD2);
-        food2.addActionListener(e -> {
-            if (controller.getCurrentThing() == 0) {
+        fastFood.setContentAreaFilled(false);
+        coffee = new JButton(new ImageIcon(Thing.COFFEE));
+        coffee.addActionListener(e -> {
                 controller.changeThing(4);
                 gameCanvas.changePosition(-104);
-            }
         });
+        coffee.setContentAreaFilled(false);
 
-        shopPanel.add(thing1);
-        shopPanel.add(thing2);
-        shopPanel.add(food1);
-        shopPanel.add(food2);
+        shopPanel.add(batarang);
+        shopPanel.add(steeringWheel);
+        shopPanel.add(fastFood);
+        shopPanel.add(coffee);
         shopPanel.setOpaque(false);
 
         frame.add(mainPanel, BorderLayout.EAST);
