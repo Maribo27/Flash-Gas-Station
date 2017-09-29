@@ -4,7 +4,10 @@ package model;
  * Created by Maria on 15.09.2017.
  */
 class Characteristics {
-    int FlashSpeed, pumpSpeed, patience, balance;
+    private int FlashSpeed;
+    private int pumpSpeed;
+    private int patience;
+    private int balance;
     int currentThing;
 
     Characteristics(){

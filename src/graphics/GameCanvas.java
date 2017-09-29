@@ -13,10 +13,10 @@ import java.io.*;
  */
 public class GameCanvas implements Runnable {
 
-	public static final int BATARANG = 1;
-	public static final int STEERING_WHEEL = 2;
-	public static final int FASTFOOD = 3;
-	public static final int COFFEE = 4;
+	private static final int BATARANG = 1;
+	private static final int STEERING_WHEEL = 2;
+	private static final int FASTFOOD = 3;
+	private static final int COFFEE = 4;
 	private GasStation controller;
 	Canvas canvas = new Canvas();
 	private int newPosition;
@@ -81,8 +81,8 @@ public class GameCanvas implements Runnable {
 		Graphics g = bs.getDrawGraphics();
 		g.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
         background.draw(g, 0, 0);
-		for (int count = 0; count < controller.getCountOfPumps(); count++){
-			pump.draw(g, 20 + (cord_X + 20) * count, 230);
+		for (int count = 0; count < 7; count++){
+			pump.draw(g, 20 + (60 + pump.getWidth()) * count, 230);
 		}
 
         if (leftPressed) flash.draw(g, cord_X, Images.CORD_Y);
@@ -105,8 +105,7 @@ public class GameCanvas implements Runnable {
 		}
 		if (cord_X == - flash.getWidth()) {
 			things = controller.getCurrentThing();
-			if (things != 0) isThing = true;
-			else isThing = false;
+			isThing = things != 0;
 		}
 	}
 
@@ -119,9 +118,9 @@ public class GameCanvas implements Runnable {
 			e.printStackTrace();
 		}
 
-        //assert sourceImage != null;
-
-        return new ImageDraw(Toolkit.getDefaultToolkit().createImage(sourceImage.getSource()));
+		if (sourceImage != null) {
+			return new ImageDraw(Toolkit.getDefaultToolkit().createImage(sourceImage.getSource()));
+		} else return null;
 	}
 
 	private class MouseInputAdapter extends MouseAdapter {

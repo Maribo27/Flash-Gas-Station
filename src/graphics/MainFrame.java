@@ -10,13 +10,11 @@ import java.awt.*;
  */
 public class MainFrame {
     private JFrame frame = new JFrame("Супергеройская АЗС");
-    private GasStation controller;
+    private JPanel framePanel = new JPanel();
 
     public MainFrame(GasStation controller){
-        this.controller = controller;
         JButton startGame = new JButton("Старт");
         JButton help = new JButton("Помощь");
-        JButton store = new JButton("Магазин улучшений");
         JButton exit = new JButton("Выход");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
@@ -24,25 +22,22 @@ public class MainFrame {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setIconImage(Images.ICON.getImage());
-        frame.setContentPane(new Background(0));
-        Container container = frame.getContentPane();
-        container.setLayout(new BorderLayout());
+
+        framePanel = new Background(Images.MAIN_BACKGROUND);
+        frame.add(framePanel);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.add(startGame);
-        buttonPanel.add(store);
         buttonPanel.add(help);
         buttonPanel.add(exit);
         buttonPanel.setOpaque(false);
-        frame.add(buttonPanel, BorderLayout.EAST);
+
+        framePanel.add(buttonPanel);
         frame.setVisible(true);
 
-        startGame.addActionListener(e -> {
-            frame.dispose();
-            GameField newGame = new GameField(controller);
-            frame = newGame.getFrame();
-        });
+        startGame.addActionListener(e -> controller.showLevelScreen());
+
         exit.addActionListener(e -> {
             frame.dispose();
             System.exit(0);
@@ -55,13 +50,15 @@ public class MainFrame {
             helpFrame.setResizable(false);
             helpFrame.setVisible(true);
         });
-        store.addActionListener(e -> {
-            JFrame storeFrame = new JFrame("Магазин");
-            storeFrame.setLayout(new BorderLayout());
-            storeFrame.setSize(new Dimension(100,100));
-            storeFrame.setLocationRelativeTo(null);
-            storeFrame.setResizable(false);
-            storeFrame.setVisible(true);
-        });
+    }
+
+    public void changeFrame(JPanel newPanel){
+        frame.remove(framePanel);
+        framePanel = newPanel;
+        frame.add(framePanel);
+        frame.setSize(new Dimension(newPanel.getWidth(), newPanel.getHeight()));
+        frame.setLocationRelativeTo(null);
+        frame.repaint();
+        frame.revalidate();
     }
 }

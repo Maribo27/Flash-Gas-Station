@@ -1,7 +1,12 @@
 package controller;
 
+import graphics.GameField;
+import graphics.LevelSelection;
 import graphics.MainFrame;
 import model.GameProgress;
+
+import javax.swing.Timer;
+
 
 /**
  * Created by Maria on 09.09.2017.
@@ -9,43 +14,27 @@ import model.GameProgress;
 public class GasStation {
     private MainFrame view;
     private GameProgress model;
+    private int check = 0;
+    private int lastLevel = 1;
     public GasStation(){
         view = new MainFrame(this);
         model = new GameProgress(this);
     }
 
-    public int getLevel(){
-        return model.getLevel();
+    public void showLevelScreen(){
+        LevelSelection levelSelection = new LevelSelection(lastLevel, this);
+        view.changeFrame(levelSelection.getLevelPanel());
     }
-    public int getGoal(){
-        return model.getGoal();
+
+    public void startGame(int level){
+        model.changeLevel(level);
+        GameField gameField = new GameField(this, level);
+        view.changeFrame(gameField.getFrame());
     }
-    public int getCarNumbers(){
-        return model.getCarNumbers();
-    }
+
+    public int getGoal(){return model.getGoal();}
+    public int getCarNumbers(){return model.getCarNumbers();}
     public int getCountOfPumps(){return model.getCountOfPumps();}
-    /*public int getFlashSpeed(){
-        return model.getFlashSpeed();
-    }
-    public int getPumpSpeed(){
-        return model.getPumpSpeed();
-    }
-    public int getPatience(){
-        return model.getPatience();
-    }
-    public String getDescription(){return model.getDescription();}
-    public void increaseFlashSpeed(){
-        model.increaseFlashSpeed();
-    }
-    public void increasePumpSpeed(){
-        model.increasePumpSpeed();
-    }
-    public void increasePatience(){
-        model.increasePatience();
-    }
-    public void increaseLevel(){
-        model.increaseLevel();
-    }*/
 
     public int getCurrentThing(){
         return model.getCurrentThing();

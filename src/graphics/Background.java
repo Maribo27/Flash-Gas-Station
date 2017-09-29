@@ -11,9 +11,8 @@ import java.io.IOException;
  */
 public class Background extends JPanel{
     private String path;
-    Background(int mode){
-        if (mode == 0) path = Images.MAIN_BACKGROUND;
-        else path = Images.GAME_BACKGROUND;
+    Background(String path){
+        this.path = path;
     }
     public void paintComponent(Graphics g){
         Image im = null;
