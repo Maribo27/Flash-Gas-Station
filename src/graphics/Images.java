@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * Created by Maria on 09.09.2017.
  */
-class Images {
+final class Images {
     final static String MAIN_BACKGROUND = "pics\\main.png";
     final static String GAME_BACKGROUND = "pics\\bs.png";
     final static ImageIcon CAR = new ImageIcon("pics\\car.png");

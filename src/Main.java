@@ -16,6 +16,6 @@ public class Main {
             System.err.println("Невозможно применить данную тему оформления");
         }
 
-        GasStation gasStation = new GasStation();
+        new GasStation();
     }
 }

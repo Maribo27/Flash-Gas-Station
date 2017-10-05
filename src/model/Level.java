@@ -8,8 +8,11 @@ class Level {
     int countOfCars;
     int countOfPumps;
     int goal;
+    int currentLevel = 0;
+    int currentGoal = 0;
 
     void changeState(int currentLevel){
+        this.currentLevel = currentLevel;
         switch(currentLevel){
             case 1:
                 countOfCars = 10;

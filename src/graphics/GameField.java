@@ -20,7 +20,6 @@ public class GameField {
     private GameCanvas gameCanvas;
 
     private int level;
-    private int currentGoal = 0;
 
     private Timer timer;
 
@@ -29,6 +28,8 @@ public class GameField {
     public GameField(GasStation controller, int level){
         this.controller = controller;
         this.level = level;
+    }
+    public void initGameField(){
         initFrame();
         initPanels();
         gameCanvas = new GameCanvas(controller);
@@ -138,7 +139,7 @@ public class GameField {
         topPanel.setSize(new Dimension(1024,150));
 
         levelLabel = new JLabel("Уровень: " + level);
-        goalLabel = new JLabel("Цель: " + currentGoal + "/" + controller.getGoal() + "$");
+        goalLabel = new JLabel("Цель: " + controller.getCurrentGoal() + "/" + controller.getGoal() + "$");
 
         pauseButton = new JButton("Пауза");
         pauseButton.addActionListener(e -> {

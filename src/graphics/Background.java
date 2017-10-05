@@ -9,11 +9,13 @@ import java.io.IOException;
 /**
  * Created by Maria on 08.09.2017.
  */
-public class Background extends JPanel{
+public class Background extends JPanel {
     private String path;
+
     Background(String path){
         this.path = path;
     }
+
     public void paintComponent(Graphics g){
         Image im = null;
         try {

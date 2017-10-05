@@ -17,21 +17,27 @@ public class GameCanvas implements Runnable {
 	private static final int STEERING_WHEEL = 2;
 	private static final int FASTFOOD = 3;
 	private static final int COFFEE = 4;
+
 	private GasStation controller;
 	Canvas canvas = new Canvas();
+
 	private int newPosition;
 	private int things;
-	private boolean isThing = false;
-	GameCanvas (GasStation controller){
-		this.controller = controller;
-	}
+    private int cord_X = 0;
 
+	private boolean isThing = false;
 	private boolean running;
 	private boolean leftPressed = false;
 
-	private static ImageDraw flash, background, rightFlash, pump, thing;
+	private static ImageDraw flash;
+    private static ImageDraw background;
+    private static ImageDraw rightFlash;
+    private static ImageDraw pump;
+    private static ImageDraw thing;
 
-	private static int cord_X = 0;
+	GameCanvas (GasStation controller){
+		this.controller = controller;
+	}
 
 	void start() {
 		newPosition = cord_X;
@@ -70,25 +76,31 @@ public class GameCanvas implements Runnable {
 				thing = getImage(Thing.COFFEE);
 				break;
 		}
+
 		BufferStrategy bs = canvas.getBufferStrategy();
+
 		if (bs == null) {
 			canvas.createBufferStrategy(2);
 			canvas.requestFocus();
 			return;
 		}
 
-
 		Graphics g = bs.getDrawGraphics();
 		g.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
         background.draw(g, 0, 0);
-		for (int count = 0; count < 7; count++){
+		for (int count = 0; count < controller.getCountOfPumps(); count++){
 			pump.draw(g, 20 + (60 + pump.getWidth()) * count, 230);
 		}
 
-        if (leftPressed) flash.draw(g, cord_X, Images.CORD_Y);
-        else rightFlash.draw(g, cord_X, Images.CORD_Y);
+        if (leftPressed) {
+            flash.draw(g, cord_X, Images.CORD_Y);
+        } else {
+            rightFlash.draw(g, cord_X, Images.CORD_Y);
+        }
 
-		if (isThing) thing.draw(g, cord_X, Images.CORD_Y - 10);
+		if (isThing) {
+            thing.draw(g, cord_X, Images.CORD_Y - 10);
+        }
 
 		g.dispose();
 		bs.show();
@@ -120,23 +132,31 @@ public class GameCanvas implements Runnable {
 
 		if (sourceImage != null) {
 			return new ImageDraw(Toolkit.getDefaultToolkit().createImage(sourceImage.getSource()));
-		} else return null;
+		} else {
+            return null;
+        }
 	}
 
 	private class MouseInputAdapter extends MouseAdapter {
 	    public void mouseClicked(MouseEvent event) {
 	        boolean smallCord = event.getX() > cord_X && event.getX() < cord_X + flash.getWidth();
 
-			if (smallCord) return;
+			if (smallCord) {
+                return;
+            }
 			newPosition = event.getX();
-			if (newPosition != cord_X) newPosition -= flash.getWidth() / 2;
+			if (newPosition != cord_X) {
+                newPosition -= flash.getWidth() / 2;
+            }
         }
     }
 
     void changePosition(int newCord){
 		newPosition = newCord;
 		things = 0;
-		if (newPosition > cord_X) newPosition -= flash.getWidth();
+		if (newPosition > cord_X) {
+            newPosition -= flash.getWidth();
+        }
 		render();
 		update();
 	}

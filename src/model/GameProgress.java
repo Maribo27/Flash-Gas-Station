@@ -20,8 +20,17 @@ public class GameProgress {
     public int getCurrentThing(){
         return characteristics.currentThing;
     }
+    public int getCurrentLevel(){
+        return levelInfo.currentLevel;
+    }
     public void changeLevel(int level){
         levelInfo.changeState(level);
+    }
+    public int getCurrentGoal(){
+        return levelInfo.currentGoal;
+    }
+    public void setCurrentGoal(int goal){
+        levelInfo.currentGoal = goal;
     }
 
     public void changeThing(int count){
