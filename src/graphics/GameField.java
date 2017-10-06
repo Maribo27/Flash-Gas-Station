@@ -1,6 +1,8 @@
 package graphics;
 
 import controller.GasStation;
+import graphics.Images.Images;
+import graphics.Images.Thing;
 import model.Car;
 import model.Pump;
 
@@ -26,6 +28,9 @@ public class GameField {
     private GameCanvas gameCanvas;
 
     private int level;
+    private int timeCount = 0;
+
+    private boolean isDelete = false;
 
     private Timer timer;
 
@@ -33,8 +38,13 @@ public class GameField {
 
     private List<Pump> pumpList;
     private List<Car> carList = new ArrayList<>();
-    private boolean isDelete = false;
-    private int timeCount = 0;
+
+
+    private JLabel goalLabel;
+    private JButton pauseButton;
+
+
+
 
     public GameField(GasStation controller, int level){
         this.controller = controller;
@@ -111,9 +121,11 @@ public class GameField {
 
         JPanel carsPanel = new JPanel();
         carsPanel.setLayout(new BoxLayout(carsPanel, BoxLayout.Y_AXIS));
+
         JScrollPane scrollCarPanel = new JScrollPane(carsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         Map<Integer, JButton> cars = new HashMap<>();
+
         int []carCounter = new int[controller.getCarNumbers()];
         for (int car = 0; car < controller.getCarNumbers(); car++){
             carCounter[car] = car;
@@ -130,6 +142,8 @@ public class GameField {
                 for (Pump pump : pumpList){
                     if (pump.isFree()) {
                         pump.setFree(false);
+                        pump.initCar(carList.get(car).getPatience());
+                        carList.remove(car);
                         isDelete = true;
                         break;
                     }
@@ -137,6 +151,7 @@ public class GameField {
 
                 if (isDelete) {
                     carsPanel.remove(button);
+                    carsPanel.repaint();
                     carsPanel.revalidate();
                     cars.remove(Integer.parseInt(button.getText()));
                     isDelete = false;
@@ -144,37 +159,61 @@ public class GameField {
             });
         }
 
-        timer = new Timer(5000, e -> {
-            if (timeCount < controller.getCarNumbers()) {
+        timer = new Timer(1000, e -> {
+            if (timeCount < controller.getCarNumbers() && timer.getDelay() % 5000 == 0) {
                 carList.add(new Car());
                 carsPanel.add(cars.get(timeCount));
                 carsPanel.revalidate();
                 timeCount++;
             }
+
             if (carList.size() != 0){
                 for (Car car : carList) {
-                    if (car.getPatience() > 5) {
+                    if (car.getPatience() > 0) {
                         car.setPatience();
                     }
                 }
             }
+
+            pumpList = controller.getPumps();
+
+            for (Pump pump : pumpList){
+                if (!pump.isFree()){
+                    if (pump.getPatience() > 0) {
+                        pump.setPatience();
+                    }
+                    else {
+                        pump.setFree(true);
+                        updateState();
+                        continue;
+                    }
+                    if (pump.getProgress() < 100){
+                        pump.setProgress();
+                    }
+                    else {
+                        pump.nullProgress();
+                        controller.setCurrentGoal(pump.getPatience());
+                        pump.setFree(true);
+                        updateState();
+                    }
+                }
+            }
+            controller.setPumps(pumpList);
         });
-
-
 
         carsPanel.setOpaque(false);
         scrollCarPanel.setOpaque(false);
         scrollCarPanel.getViewport().setOpaque(false);
         mainPanel.add(scrollCarPanel);
     }
+
     private void initInformation(){
         JLabel levelLabel;
-        JLabel goalLabel;
-        JButton pauseButton;
 
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setSize(new Dimension(1024,150));
+
 
         levelLabel = new JLabel("Уровень: " + level);
         goalLabel = new JLabel("Цель: " + controller.getCurrentGoal() + "/" + controller.getGoal() + "$");
@@ -216,5 +255,18 @@ public class GameField {
 
     public JPanel getFrame(){
         return frame;
+    }
+
+    private void updateState(){
+        topPanel.remove(goalLabel);
+        topPanel.remove(pauseButton);
+
+        goalLabel = new JLabel("Цель: " + controller.getCurrentGoal() + "/" + controller.getGoal() + "$");
+        topPanel.add(goalLabel);
+        topPanel.add(pauseButton);
+        topPanel.repaint();
+        topPanel.revalidate();
+        frame.repaint();
+        frame.revalidate();
     }
 }

@@ -1,6 +1,8 @@
 package graphics;
 
 import controller.GasStation;
+import graphics.Images.Images;
+import graphics.Images.Thing;
 import model.Pump;
 
 import javax.imageio.ImageIO;
@@ -8,24 +10,25 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+
+import static graphics.Consts.Things.*;
 
 /**
  * Created by Maria on 11.09.2017.
  */
 public class GameCanvas implements Runnable {
 
-	private static final int BATARANG = 1;
-	private static final int STEERING_WHEEL = 2;
-	private static final int FASTFOOD = 3;
-	private static final int COFFEE = 4;
-
 	private GasStation controller;
+
 	Canvas canvas = new Canvas();
 
 	private int newPosition;
 	private int things;
     private int cord_X = 0;
+
+    private List<Integer> coordsOfPumps = new ArrayList<>();
 
 	private boolean isThing = false;
 	private boolean running;
@@ -63,6 +66,10 @@ public class GameCanvas implements Runnable {
         background = getImage(Images.BACK_PANEL);
         pump = getImage(Images.PUMP.toString());
         car = getImage(Images.CAR.toString());
+		for (int count = 0; count < controller.getCountOfPumps(); count++){
+			coordsOfPumps.add(20 + (60 + pump.getWidth()) * count);
+		}
+
 	}
 	
 	private void render() {
@@ -96,6 +103,7 @@ public class GameCanvas implements Runnable {
 			pump.draw(g, 20 + (60 + pump.getWidth()) * count, 230);
 		}
 
+
 		List<Pump> pumpList = controller.getPumps();
 
 		for (int countPump = 0; countPump < pumpList.size(); countPump++){
@@ -111,8 +119,20 @@ public class GameCanvas implements Runnable {
         }
 
 		if (isThing) {
-            thing.draw(g, cord_X, Images.CORD_Y - 10);
+            thing.draw(g, cord_X, Images.CORD_Y - 100);
         }
+
+        for (Integer coord : coordsOfPumps){
+
+		    boolean pumpPressed = newPosition > coord &&
+                    cord_X > coord &&
+                    newPosition < coord + pump.getWidth() &&
+                    cord_X < coord + pump.getWidth();
+
+			if (pumpPressed){
+				isThing = false;
+			}
+		}
 
 		g.dispose();
 		bs.show();
@@ -151,12 +171,15 @@ public class GameCanvas implements Runnable {
 
 	private class MouseInputAdapter extends MouseAdapter {
 	    public void mouseClicked(MouseEvent event) {
+
 	        boolean smallCord = event.getX() > cord_X && event.getX() < cord_X + flash.getWidth();
 
 			if (smallCord) {
                 return;
             }
+
 			newPosition = event.getX();
+
 			if (newPosition != cord_X) {
                 newPosition -= flash.getWidth() / 2;
             }

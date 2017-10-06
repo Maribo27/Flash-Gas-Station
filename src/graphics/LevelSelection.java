@@ -1,6 +1,7 @@
 package graphics;
 
 import controller.GasStation;
+import graphics.Images.Images;
 
 import javax.swing.*;
 import java.awt.*;

@@ -10,8 +10,10 @@ import java.util.List;
 public class GameProgress {
     private Characteristics characteristics = new Characteristics();
     private Level levelInfo = new Level();
+    private GasStation controller;
 
     public GameProgress(GasStation controller){
+        this.controller = controller;
         characteristics = new Characteristics();
         levelInfo = new Level();
     }
@@ -44,6 +46,6 @@ public class GameProgress {
     }
 
     public void changeThing(int count){
-        characteristics.changeThing(count);
+        characteristics.setCurrentThing(count);
     }
 }
