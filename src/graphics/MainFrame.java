@@ -22,6 +22,7 @@ public class MainFrame {
         frame.setSize(new Dimension(565,825));
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+        frame.setAlwaysOnTop(true);
         frame.setIconImage(Images.ICON.getImage());
 
         JButton startGame = new JButton("Старт");
@@ -63,5 +64,9 @@ public class MainFrame {
         frame.setLocationRelativeTo(null);
         frame.repaint();
         frame.revalidate();
+    }
+
+    public void freezeFrame(boolean isFreeze){
+        frame.setEnabled(isFreeze);
     }
 }

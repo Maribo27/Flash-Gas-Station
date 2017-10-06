@@ -1,12 +1,14 @@
 package graphics;
 
 import controller.GasStation;
+import model.Pump;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by Maria on 11.09.2017.
@@ -34,6 +36,7 @@ public class GameCanvas implements Runnable {
     private static ImageDraw rightFlash;
     private static ImageDraw pump;
     private static ImageDraw thing;
+	private static ImageDraw car;
 
 	GameCanvas (GasStation controller){
 		this.controller = controller;
@@ -59,6 +62,7 @@ public class GameCanvas implements Runnable {
 		rightFlash = getImage(Images.FLASH_RIGHT);
         background = getImage(Images.BACK_PANEL);
         pump = getImage(Images.PUMP.toString());
+        car = getImage(Images.CAR.toString());
 	}
 	
 	private void render() {
@@ -90,6 +94,14 @@ public class GameCanvas implements Runnable {
         background.draw(g, 0, 0);
 		for (int count = 0; count < controller.getCountOfPumps(); count++){
 			pump.draw(g, 20 + (60 + pump.getWidth()) * count, 230);
+		}
+
+		List<Pump> pumpList = controller.getPumps();
+
+		for (int countPump = 0; countPump < pumpList.size(); countPump++){
+			if (!pumpList.get(countPump).isFree()) {
+				car.draw(g, 20 + (60 + car.getWidth()) * countPump, 430);
+			}
 		}
 
         if (leftPressed) {

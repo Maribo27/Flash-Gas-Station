@@ -1,5 +1,8 @@
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Maria on 15.09.2017.
  */
@@ -10,6 +13,7 @@ class Level {
     int goal;
     int currentLevel = 0;
     int currentGoal = 0;
+    List<Pump> pumps;
 
     void changeState(int currentLevel){
         this.currentLevel = currentLevel;
@@ -40,6 +44,11 @@ class Level {
                 goal = 1000;
                 break;
         }
-        new LevelStats(countOfCars, countOfPumps, goal);
+
+        pumps = new ArrayList<>();
+
+        for (int pump = 0; pump < countOfPumps; pump++){
+            pumps.add(new Pump());
+        }
     }
 }

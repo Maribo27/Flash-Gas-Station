@@ -1,11 +1,18 @@
 package model;
 
 public class Car {
-    int patience;
+    private int patience;
     int thing;
-    boolean haveThing;
+    private boolean haveThing;
     public Car(){
         patience = 50;
         haveThing = false;
+    }
+
+    public void setPatience(){
+        patience -= 5;
+    }
+    public int getPatience(){
+        return patience;
     }
 }

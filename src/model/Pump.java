@@ -1,8 +1,15 @@
 package model;
 
 public class Pump {
-    boolean isFree;
-    public Pump(){
+    private boolean isFree;
+    Pump(){
         isFree = true;
+    }
+
+    public boolean isFree() {
+        return isFree;
+    }
+    public void setFree(boolean isFree) {
+        this.isFree = isFree;
     }
 }

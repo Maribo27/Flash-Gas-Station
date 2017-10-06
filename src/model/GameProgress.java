@@ -2,6 +2,8 @@ package model;
 
 import controller.GasStation;
 
+import java.util.List;
+
 /**
  * Created by Maria on 09.09.2017.
  */
@@ -31,6 +33,14 @@ public class GameProgress {
     }
     public void setCurrentGoal(int goal){
         levelInfo.currentGoal = goal;
+    }
+
+    public List<Pump> getPumps(){
+        return levelInfo.pumps;
+    }
+
+    public void setPumps(List<Pump> pumps){
+        levelInfo.pumps = pumps;
     }
 
     public void changeThing(int count){

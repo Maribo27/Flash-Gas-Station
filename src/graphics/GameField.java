@@ -1,9 +1,15 @@
 package graphics;
 
 import controller.GasStation;
+import model.Car;
+import model.Pump;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
 
 /**
  * Created by Maria on 09.09.2017.
@@ -23,7 +29,12 @@ public class GameField {
 
     private Timer timer;
 
-    private JDialog pauseFrame;
+    private JFrame pauseFrame;
+
+    private List<Pump> pumpList;
+    private List<Car> carList = new ArrayList<>();
+    private boolean isDelete = false;
+    private int timeCount = 0;
 
     public GameField(GasStation controller, int level){
         this.controller = controller;
@@ -100,31 +111,58 @@ public class GameField {
 
         JPanel carsPanel = new JPanel();
         carsPanel.setLayout(new BoxLayout(carsPanel, BoxLayout.Y_AXIS));
+        JScrollPane scrollCarPanel = new JScrollPane(carsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        for (int counterOfCarsButton = 0; counterOfCarsButton < controller.getCarNumbers(); counterOfCarsButton++)
-            carsPanel.add(new JButton(counterOfCarsButton + "", Images.CAR));
+        Map<Integer, JButton> cars = new HashMap<>();
+        int []carCounter = new int[controller.getCarNumbers()];
+        for (int car = 0; car < controller.getCarNumbers(); car++){
+            carCounter[car] = car;
+        }
+        for (int car : carCounter){
+            JButton button = new JButton("" + car, Images.CAR);
+            button.setEnabled(true);
+            button.setContentAreaFilled(false);
 
-        for (int counter = 0; counter < carsPanel.getComponentCount(); counter++)
-        {
-            carsPanel.getComponent(counter).setEnabled(false);
-            ((JButton)carsPanel.getComponent(counter)).setContentAreaFilled(false);
+            cars.put(car, button);
+
+            button.addActionListener(e -> {
+                pumpList = controller.getPumps();
+                for (Pump pump : pumpList){
+                    if (pump.isFree()) {
+                        pump.setFree(false);
+                        isDelete = true;
+                        break;
+                    }
+                }
+
+                if (isDelete) {
+                    carsPanel.remove(button);
+                    carsPanel.revalidate();
+                    cars.remove(Integer.parseInt(button.getText()));
+                    isDelete = false;
+                }
+            });
         }
 
         timer = new Timer(5000, e -> {
-            for (int counter = 0; counter < carsPanel.getComponentCount(); counter++)
-            {
-                if (!carsPanel.getComponent(counter).isEnabled()){
-                    carsPanel.getComponent(counter).setEnabled(true);
-                    break;
+            if (timeCount < controller.getCarNumbers()) {
+                carList.add(new Car());
+                carsPanel.add(cars.get(timeCount));
+                carsPanel.revalidate();
+                timeCount++;
+            }
+            if (carList.size() != 0){
+                for (Car car : carList) {
+                    if (car.getPatience() > 5) {
+                        car.setPatience();
+                    }
                 }
-                if (counter == controller.getCarNumbers())  timer.stop();
             }
         });
 
 
 
         carsPanel.setOpaque(false);
-        JScrollPane scrollCarPanel = new JScrollPane(carsPanel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollCarPanel.setOpaque(false);
         scrollCarPanel.getViewport().setOpaque(false);
         mainPanel.add(scrollCarPanel);
@@ -143,15 +181,22 @@ public class GameField {
 
         pauseButton = new JButton("Пауза");
         pauseButton.addActionListener(e -> {
-            pauseFrame = new JDialog(new JFrame(), "Пауза", true);
+            controller.freezeFrame(false);
+            pauseFrame = new JFrame("Пауза");
+            timer.stop();
             JLabel pauseLabel = new JLabel("Пауза");
             pauseFrame.add(pauseLabel);
             pauseFrame.setSize(100,100);
             pauseFrame.setLocationRelativeTo(null);
             pauseFrame.setAlwaysOnTop(true);
-            pauseFrame.setFocusable(true);
             pauseFrame.setVisible(true);
-            pauseFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            JButton okButton = new JButton("Back");
+            okButton.addActionListener(e1 -> {
+                timer.start();
+                pauseFrame.dispose();
+                controller.freezeFrame(true);
+            });
+            pauseFrame.add(okButton);
         });
 
         topPanel.add(levelLabel);
