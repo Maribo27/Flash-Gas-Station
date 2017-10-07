@@ -1,7 +1,8 @@
-package graphics;
+package graphics.frames;
 
 import controller.GasStation;
-import graphics.Consts.Consts;
+import graphics.consts.Consts;
+import graphics.images.Background;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,9 +33,13 @@ public class MainFrame {
         JButton help = new JButton("Помощь");
         help.addActionListener(e -> {
             JFrame helpFrame = new JFrame("Помощь");
+            JLabel information = new JLabel("<html><b>Здесь будет помощь и об авторе инфа:)</b></html>");
+            helpFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             helpFrame.setLayout(new BorderLayout());
             helpFrame.setSize(new Dimension(100,100));
             helpFrame.setLocationRelativeTo(null);
+            helpFrame.add(information);
+            helpFrame.setAlwaysOnTop(true);
             helpFrame.setResizable(false);
             helpFrame.setVisible(true);
         });

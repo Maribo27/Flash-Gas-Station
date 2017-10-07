@@ -1,4 +1,4 @@
-package graphics;
+package graphics.images;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,7 +12,7 @@ import java.io.IOException;
 public class Background extends JPanel {
     private String path;
 
-    Background(String path){
+    public Background(String path){
         this.path = path;
     }
 

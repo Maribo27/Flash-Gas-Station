@@ -1,4 +1,4 @@
-package graphics.Consts;
+package graphics.consts;
 
 public final class Thing {
     public final static String FASTFOOD = "pics\\food1.png";

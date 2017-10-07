@@ -1,8 +1,9 @@
 package graphics;
 
 import controller.GasStation;
-import graphics.Consts.Consts;
-import graphics.Consts.Thing;
+import graphics.consts.Consts;
+import graphics.consts.Thing;
+import graphics.images.Background;
 import model.Car;
 import model.Pump;
 
@@ -51,9 +52,9 @@ public class GameField {
 
 
 
-    public GameField(GasStation controller, int level){
+    public GameField(GasStation controller){
         this.controller = controller;
-        this.level = level;
+        this.level = controller.getCurrentLevel();
     }
 
     public void initGameField(){

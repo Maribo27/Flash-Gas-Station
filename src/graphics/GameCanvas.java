@@ -1,8 +1,9 @@
 package graphics;
 
 import controller.GasStation;
-import graphics.Consts.Consts;
-import graphics.Consts.Thing;
+import graphics.consts.Consts;
+import graphics.consts.Thing;
+import graphics.images.ImageDraw;
 import model.Pump;
 
 import javax.imageio.ImageIO;
@@ -15,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static graphics.Consts.Consts.*;
+import static graphics.consts.Consts.*;
 
 /**
  * Created by Maria on 11.09.2017.

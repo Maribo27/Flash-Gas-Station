@@ -1,7 +1,8 @@
-package graphics;
+package graphics.frames;
 
 import controller.GasStation;
-import graphics.Consts.Consts;
+import graphics.consts.Consts;
+import graphics.images.Background;
 
 import javax.swing.*;
 import java.awt.*;

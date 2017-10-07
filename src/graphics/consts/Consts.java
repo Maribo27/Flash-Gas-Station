@@ -1,4 +1,4 @@
-package graphics.Consts;
+package graphics.consts;
 
 import javax.swing.*;
 

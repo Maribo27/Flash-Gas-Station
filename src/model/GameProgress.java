@@ -8,10 +8,18 @@ import java.util.List;
 public class GameProgress {
     private Characteristics characteristics = new Characteristics();
     private Level levelInfo = new Level();
+    private int savedLevel;
 
     public GameProgress(){
         characteristics = new Characteristics();
         levelInfo = new Level();
+    }
+
+    public void setSavedLevel(int level){
+        savedLevel = level;
+    }
+    public int getSavedLevel(){
+        return savedLevel;
     }
 
     public int getSpeed(){return levelInfo.speed;}
