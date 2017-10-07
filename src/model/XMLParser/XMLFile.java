@@ -16,9 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
-/**
- * Created by Maria on 07.10.2017.
- */
 public class XMLFile {
     
     private String fileName;

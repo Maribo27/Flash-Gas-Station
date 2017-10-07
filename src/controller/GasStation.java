@@ -60,7 +60,6 @@ public class GasStation {
         }
     }
 
-
     public int getSpeed(){return model.getSpeed();}
     public int getCoefficient(){return model.getCoefficient();}
 
