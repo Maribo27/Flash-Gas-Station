@@ -42,13 +42,14 @@ public class GasStation {
     }
 
     public void changeLevel(int level){
+        model.nullBalance();
+        model.setLevel(level);
+
         try {
             new XMLFile("db\\level.xml", this).writeFile();
         } catch (IOException | TransformerException | ParserConfigurationException e) {
             e.printStackTrace();
         }
-        model.nullBalance();
-        model.setLevel(level);
     }
 
     public int getGoal(){return model.getGoal();}
