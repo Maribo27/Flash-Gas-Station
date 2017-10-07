@@ -5,8 +5,8 @@ public class Pump {
     private boolean haveThing;
 
     private int progress;
-    private int patience;
-    private int thing;
+    private int payment;
+    private int thingToBuy;
 
     Pump(){
         isFree = true;
@@ -14,9 +14,9 @@ public class Pump {
 
     public void initCar(int patience){
         progress = 0;
-        this.patience = patience;
-        thing = (int) (Math.random() * 4);
-        haveThing = thing == 0;
+        this.payment = patience + 15;
+        thingToBuy = (int) (Math.random() * 4);
+        haveThing = thingToBuy == 0;
     }
 
     public boolean isFree() {
@@ -26,8 +26,8 @@ public class Pump {
         this.isFree = isFree;
     }
 
-    public void setProgress(){
-        progress += 5;
+    public void increaseProgress(){
+        progress += 10;
     }
     public void nullProgress(){ progress = 0;}
     public int getProgress(){
@@ -35,19 +35,21 @@ public class Pump {
     }
 
 
-    public void setPatience(){
-        patience -= 1;
+    public void reducePayment(){
+        payment -= 1;
     }
-    public int getPatience(){
-        return patience;
+    public int getPayment(){
+        return payment;
     }
 
-    public int getThing(){
-        return thing;
+    public int getThingToBuy(){
+        return thingToBuy;
     }
 
     public void setHaveThing(){
+        if (haveThing) return;
         haveThing = true;
+        payment += 15;
     }
     public boolean isHaveThing(){
         return haveThing;

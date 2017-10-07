@@ -1,8 +1,8 @@
 package graphics;
 
 import controller.GasStation;
-import graphics.Images.Images;
-import graphics.Images.Thing;
+import graphics.Consts.Consts;
+import graphics.Consts.Thing;
 import model.Pump;
 
 import javax.imageio.ImageIO;
@@ -11,9 +11,11 @@ import java.awt.event.*;
 import java.awt.image.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import static graphics.Consts.Things.*;
+import static graphics.Consts.Consts.*;
 
 /**
  * Created by Maria on 11.09.2017.
@@ -25,7 +27,6 @@ public class GameCanvas implements Runnable {
 	Canvas canvas = new Canvas();
 
 	private int newPosition;
-	private int things;
     private int cord_X = 0;
 
     private List<Integer> coordsOfPumps = new ArrayList<>();
@@ -38,8 +39,17 @@ public class GameCanvas implements Runnable {
     private static ImageDraw background;
     private static ImageDraw rightFlash;
     private static ImageDraw pump;
-    private static ImageDraw thing;
 	private static ImageDraw car;
+
+	private int thingInHand;
+
+    private Map<Integer, ImageDraw> things = new HashMap<>();
+    {
+        things.put(BATARANG, getImage(Thing.BATARANG));
+        things.put(STEERING_WHEEL, getImage(Thing.STEERING_WHEEL));
+        things.put(FASTFOOD, getImage(Thing.FASTFOOD));
+        things.put(COFFEE, getImage(Thing.COFFEE));
+    }
 
 	GameCanvas (GasStation controller){
 		this.controller = controller;
@@ -61,33 +71,17 @@ public class GameCanvas implements Runnable {
 	
 	private void init() {
 		canvas.addMouseListener(new MouseInputAdapter());
-		flash = getImage(Images.FLASH);
-		rightFlash = getImage(Images.FLASH_RIGHT);
-        background = getImage(Images.BACK_PANEL);
-        pump = getImage(Images.PUMP.toString());
-        car = getImage(Images.CAR.toString());
-		for (int count = 0; count < controller.getCountOfPumps(); count++){
+		flash = getImage(Consts.FLASH);
+		rightFlash = getImage(Consts.FLASH_RIGHT);
+        background = getImage(Consts.BACK_PANEL);
+        pump = getImage(Consts.PUMP.toString());
+        car = getImage(Consts.CAR.toString());
+		for (int count = 0; count < 5; count++){
 			coordsOfPumps.add(20 + (60 + pump.getWidth()) * count);
 		}
-
 	}
 	
 	private void render() {
-		switch (things){
-			case BATARANG:
-				thing = getImage(Thing.BATARANG);
-				break;
-			case STEERING_WHEEL:
-				thing = getImage(Thing.STEERING_WHEEL);
-				break;
-			case FASTFOOD:
-				thing = getImage(Thing.FASTFOOD);
-				break;
-			case COFFEE:
-				thing = getImage(Thing.COFFEE);
-				break;
-		}
-
 		BufferStrategy bs = canvas.getBufferStrategy();
 
 		if (bs == null) {
@@ -98,41 +92,44 @@ public class GameCanvas implements Runnable {
 
 		Graphics g = bs.getDrawGraphics();
 		g.clearRect(0,0,canvas.getWidth(), canvas.getHeight());
-        background.draw(g, 0, 0);
-		for (int count = 0; count < controller.getCountOfPumps(); count++){
-			pump.draw(g, 20 + (60 + pump.getWidth()) * count, 230);
-		}
 
+		background.draw(g, 0, 0);
+		for (int count = 0; count < controller.getCountOfPumps(); count++){
+			pump.draw(g, coordsOfPumps.get(count), 230);
+		}
 
 		List<Pump> pumpList = controller.getPumps();
 
 		for (int countPump = 0; countPump < pumpList.size(); countPump++){
 			if (!pumpList.get(countPump).isFree()) {
 				car.draw(g, 20 + (60 + car.getWidth()) * countPump, 430);
+				if (!pumpList.get(countPump).isHaveThing()) {
+                    things.get(pumpList.get(countPump).getThingToBuy()).draw(g, 20 + (60 + car.getWidth()) * countPump, 400);
+                }
 			}
+
 		}
 
         if (leftPressed) {
-            flash.draw(g, cord_X, Images.CORD_Y);
+            flash.draw(g, cord_X, Consts.CORD_Y);
         } else {
-            rightFlash.draw(g, cord_X, Images.CORD_Y);
+            rightFlash.draw(g, cord_X, Consts.CORD_Y);
         }
 
 		if (isThing) {
-            thing.draw(g, cord_X, Images.CORD_Y - 100);
+            things.get(thingInHand).draw(g, cord_X, Consts.CORD_Y + 50);
         }
+        for (int pumpNumber = 0; pumpNumber < controller.getCountOfPumps(); pumpNumber++){
+            boolean pumpPressed = newPosition > coordsOfPumps.get(pumpNumber) && cord_X > coordsOfPumps.get(pumpNumber) &&
+                    newPosition < coordsOfPumps.get(pumpNumber) + pump.getWidth() && cord_X < coordsOfPumps.get(pumpNumber) + pump.getWidth() &&
+                    controller.getThingInHand() == pumpList.get(pumpNumber).getThingToBuy();
 
-        for (Integer coord : coordsOfPumps){
-
-		    boolean pumpPressed = newPosition > coord &&
-                    cord_X > coord &&
-                    newPosition < coord + pump.getWidth() &&
-                    cord_X < coord + pump.getWidth();
-
-			if (pumpPressed){
-				isThing = false;
-			}
-		}
+            if (pumpPressed){
+                isThing = false;
+                pumpList.get(pumpNumber).setHaveThing();
+                controller.setPumps(pumpList);
+            }
+        }
 
 		g.dispose();
 		bs.show();
@@ -148,8 +145,8 @@ public class GameCanvas implements Runnable {
 			leftPressed = false;
 		}
 		if (cord_X == - flash.getWidth()) {
-			things = controller.getCurrentThing();
-			isThing = things != 0;
+			thingInHand = controller.getThingInHand();
+			isThing = thingInHand != 0;
 		}
 	}
 
@@ -188,7 +185,6 @@ public class GameCanvas implements Runnable {
 
     void changePosition(int newCord){
 		newPosition = newCord;
-		things = 0;
 		if (newPosition > cord_X) {
             newPosition -= flash.getWidth();
         }

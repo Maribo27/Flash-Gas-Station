@@ -1,8 +1,8 @@
 package graphics;
 
 import controller.GasStation;
-import graphics.Images.Images;
-import graphics.Images.Thing;
+import graphics.Consts.Consts;
+import graphics.Consts.Thing;
 import model.Car;
 import model.Pump;
 
@@ -28,9 +28,13 @@ public class GameField {
     private GameCanvas gameCanvas;
 
     private int level;
+    private int seconds = 0;
     private int timeCount = 0;
+    private int increaseLevel;
+    private int carServed = 0;
 
     private boolean isDelete = false;
+    private boolean isReady = false;
 
     private Timer timer;
 
@@ -39,8 +43,9 @@ public class GameField {
     private List<Pump> pumpList;
     private List<Car> carList = new ArrayList<>();
 
-
     private JLabel goalLabel;
+    private JLabel carLabel;
+
     private JButton pauseButton;
 
 
@@ -50,6 +55,7 @@ public class GameField {
         this.controller = controller;
         this.level = level;
     }
+
     public void initGameField(){
         initFrame();
         initPanels();
@@ -60,7 +66,7 @@ public class GameField {
     }
 
     private void initFrame(){
-        frame = new Background(Images.GAME_BACKGROUND);
+        frame = new Background(Consts.GAME_BACKGROUND);
         frame.setLayout(new BorderLayout());
         frame.setSize(new Dimension(1200,700));
         frame.setVisible(true);
@@ -81,25 +87,25 @@ public class GameField {
 
         batarang = new JButton(new ImageIcon(Thing.BATARANG));
         batarang.addActionListener(e -> {
-            controller.changeThing(1);
+            controller.setThingInHand(1);
             gameCanvas.changePosition(-104);
         });
         batarang.setContentAreaFilled(false);
         steeringWheel = new JButton(new ImageIcon(Thing.STEERING_WHEEL));
         steeringWheel.addActionListener(e -> {
-            controller.changeThing(2);
+            controller.setThingInHand(2);
             gameCanvas.changePosition(-104);
         });
         steeringWheel.setContentAreaFilled(false);
         fastFood = new JButton(new ImageIcon(Thing.FASTFOOD));
         fastFood.addActionListener(e -> {
-            controller.changeThing(3);
+            controller.setThingInHand(3);
             gameCanvas.changePosition(-104);
         });
         fastFood.setContentAreaFilled(false);
         coffee = new JButton(new ImageIcon(Thing.COFFEE));
         coffee.addActionListener(e -> {
-            controller.changeThing(4);
+            controller.setThingInHand(4);
             gameCanvas.changePosition(-104);
         });
         coffee.setContentAreaFilled(false);
@@ -131,7 +137,7 @@ public class GameField {
             carCounter[car] = car;
         }
         for (int car : carCounter){
-            JButton button = new JButton("" + car, Images.CAR);
+            JButton button = new JButton("" + car, Consts.CAR);
             button.setEnabled(true);
             button.setContentAreaFilled(false);
 
@@ -143,7 +149,8 @@ public class GameField {
                     if (pump.isFree()) {
                         pump.setFree(false);
                         pump.initCar(carList.get(car).getPatience());
-                        carList.remove(car);
+                        carServed++;
+                        updateState();
                         isDelete = true;
                         break;
                     }
@@ -160,7 +167,8 @@ public class GameField {
         }
 
         timer = new Timer(1000, e -> {
-            if (timeCount < controller.getCarNumbers() && timer.getDelay() % 5000 == 0) {
+            seconds++;
+            if (timeCount < controller.getCarNumbers() && (seconds % controller.getSpeed() == 0 || seconds == 1)) {
                 carList.add(new Car());
                 carsPanel.add(cars.get(timeCount));
                 carsPanel.revalidate();
@@ -170,17 +178,18 @@ public class GameField {
             if (carList.size() != 0){
                 for (Car car : carList) {
                     if (car.getPatience() > 0) {
-                        car.setPatience();
+                        car.setPatience(controller.getCoefficient());
                     }
                 }
             }
 
             pumpList = controller.getPumps();
-
+            isReady = true;
             for (Pump pump : pumpList){
                 if (!pump.isFree()){
-                    if (pump.getPatience() > 0) {
-                        pump.setPatience();
+                    isReady = false;
+                    if (pump.getPayment() > 0) {
+                        pump.reducePayment();
                     }
                     else {
                         pump.setFree(true);
@@ -188,17 +197,33 @@ public class GameField {
                         continue;
                     }
                     if (pump.getProgress() < 100){
-                        pump.setProgress();
+                        pump.increaseProgress();
+                        isReady = false;
                     }
                     else {
                         pump.nullProgress();
-                        controller.setCurrentGoal(pump.getPatience());
+                        controller.setBalance(pump.getPayment());
                         pump.setFree(true);
                         updateState();
+                        isReady = true;
                     }
                 }
             }
             controller.setPumps(pumpList);
+
+            if (cars.size() == 0 && isReady) {
+                    timer.stop();
+                    String state;
+
+                    if (controller.getBalance() > controller.getGoal()){
+                        state = "О да, Флэш быстр как никогда";
+                        increaseLevel = 1;
+                    } else {
+                        state = "Какое огорчение, Флэш, ты не смог";
+                        increaseLevel = 0;
+                    }
+                    levelEnd(state);
+                }
         });
 
         carsPanel.setOpaque(false);
@@ -216,7 +241,8 @@ public class GameField {
 
 
         levelLabel = new JLabel("Уровень: " + level);
-        goalLabel = new JLabel("Цель: " + controller.getCurrentGoal() + "/" + controller.getGoal() + "$");
+        goalLabel = new JLabel("Цель: " + controller.getBalance() + "/" + controller.getGoal() + "$");
+        carLabel = new JLabel("Машин прошло: " + carServed + "/" + controller.getCarNumbers());
 
         pauseButton = new JButton("Пауза");
         pauseButton.addActionListener(e -> {
@@ -259,14 +285,40 @@ public class GameField {
 
     private void updateState(){
         topPanel.remove(goalLabel);
+        topPanel.remove(carLabel);
         topPanel.remove(pauseButton);
 
-        goalLabel = new JLabel("Цель: " + controller.getCurrentGoal() + "/" + controller.getGoal() + "$");
+        goalLabel = new JLabel("Цель: " + controller.getBalance() + "/" + controller.getGoal() + "$");
+        carLabel = new JLabel("Машин прошло: " + carServed + "/" + controller.getCarNumbers());
         topPanel.add(goalLabel);
+        topPanel.add(carLabel);
         topPanel.add(pauseButton);
         topPanel.repaint();
         topPanel.revalidate();
         frame.repaint();
         frame.revalidate();
+    }
+
+    private void levelEnd(String state){
+        JFrame endFrame;
+
+        endFrame = new JFrame("Конец");
+        endFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        endFrame.setLayout(new FlowLayout());
+        endFrame.setSize(new Dimension(300,100));
+        endFrame.setLocationRelativeTo(null);
+        endFrame.setResizable(false);
+        endFrame.setAlwaysOnTop(true);
+        JLabel information = new JLabel(state);
+        JButton okButton = new JButton("okey");
+        okButton.addActionListener(e -> {
+            controller.changeLevel(controller.getCurrentLevel() + increaseLevel);
+            controller.showLevelScreen();
+            endFrame.dispose();
+        });
+
+        endFrame.add(information);
+        endFrame.add(okButton);
+        endFrame.setVisible(true);
     }
 }

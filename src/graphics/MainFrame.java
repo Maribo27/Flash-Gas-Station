@@ -1,7 +1,7 @@
 package graphics;
 
 import controller.GasStation;
-import graphics.Images.Images;
+import graphics.Consts.Consts;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,7 @@ public class MainFrame {
 
     public MainFrame(GasStation controller){
         framePanel = new JPanel();
-        framePanel = new Background(Images.MAIN_BACKGROUND);
+        framePanel = new Background(Consts.MAIN_BACKGROUND);
 
         frame = new JFrame("Супергеройская АЗС");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -24,7 +24,7 @@ public class MainFrame {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setAlwaysOnTop(true);
-        frame.setIconImage(Images.ICON.getImage());
+        frame.setIconImage(Consts.ICON.getImage());
 
         JButton startGame = new JButton("Старт");
         startGame.addActionListener(e -> controller.showLevelScreen());
@@ -70,4 +70,6 @@ public class MainFrame {
     public void freezeFrame(boolean isFreeze){
         frame.setEnabled(isFreeze);
     }
+
+    public void disposeFrame(){frame.dispose();}
 }

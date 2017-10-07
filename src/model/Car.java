@@ -7,8 +7,8 @@ public class Car {
         patience = 50;
     }
 
-    public void setPatience(){
-        patience -= 5;
+    public void setPatience(int coefficient){
+        patience -= coefficient;
     }
     public int getPatience(){
         return patience;

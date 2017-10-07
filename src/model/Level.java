@@ -11,37 +11,48 @@ class Level {
     int countOfCars;
     int countOfPumps;
     int goal;
-    int currentLevel = 0;
-    int currentGoal = 0;
+    int currentLevel;
+    int balance = 0;
+    int speed;
+    int coefficient;
     List<Pump> pumps;
 
-    void changeState(int currentLevel){
-        this.currentLevel = currentLevel;
+    private void changeState(){
         switch(currentLevel){
             case 1:
-                countOfCars = 10;
+                countOfCars = 5;
                 countOfPumps = 1;
                 goal = 200;
+                speed = 10;
+                coefficient = 2;
                 break;
             case 2:
-                countOfCars = 15;
-                countOfPumps = 1;
+                countOfCars = 10;
+                countOfPumps = 2;
                 goal = 400;
+                speed = 7;
+                coefficient = 4;
                 break;
             case 3:
-                countOfCars = 20;
+                countOfCars = 15;
                 countOfPumps = 2;
-                goal = 600;
+                goal = 500;
+                speed = 7;
+                coefficient = 6;
                 break;
             case 4:
-                countOfCars = 30;
+                countOfCars = 20;
                 countOfPumps = 3;
-                goal = 800;
+                goal = 700;
+                speed = 5;
+                coefficient = 8;
                 break;
             case 5:
-                countOfCars = 45;
+                countOfCars = 30;
                 countOfPumps = 4;
-                goal = 1000;
+                goal = 800;
+                speed = 5;
+                coefficient = 10;
                 break;
         }
 
@@ -50,5 +61,10 @@ class Level {
         for (int pump = 0; pump < countOfPumps; pump++){
             pumps.add(new Pump());
         }
+    }
+
+    void setLevel(int level){
+        currentLevel = level;
+        changeState();
     }
 }

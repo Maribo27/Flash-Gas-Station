@@ -1,7 +1,5 @@
 package model;
 
-import controller.GasStation;
-
 import java.util.List;
 
 /**
@@ -10,42 +8,46 @@ import java.util.List;
 public class GameProgress {
     private Characteristics characteristics = new Characteristics();
     private Level levelInfo = new Level();
-    private GasStation controller;
 
-    public GameProgress(GasStation controller){
-        this.controller = controller;
+    public GameProgress(){
         characteristics = new Characteristics();
         levelInfo = new Level();
     }
 
+    public int getSpeed(){return levelInfo.speed;}
+    public int getCoefficient(){return levelInfo.coefficient;}
     public int getGoal(){return levelInfo.goal;}
     public int getCarNumbers(){return levelInfo.countOfCars;}
     public int getCountOfPumps(){return levelInfo.countOfPumps;}
-    public int getCurrentThing(){
-        return characteristics.currentThing;
-    }
+
     public int getCurrentLevel(){
         return levelInfo.currentLevel;
     }
-    public void changeLevel(int level){
-        levelInfo.changeState(level);
+    public void setLevel(int level){
+        levelInfo.setLevel(level);
     }
-    public int getCurrentGoal(){
-        return levelInfo.currentGoal;
+
+    public int getBalance(){
+        return levelInfo.balance;
     }
-    public void setCurrentGoal(int goal){
-        levelInfo.currentGoal = goal;
+    public void setBalance(int cash){
+        levelInfo.balance += cash;
+    }
+    public void nullBalance(){
+        levelInfo.balance = 0;
     }
 
     public List<Pump> getPumps(){
         return levelInfo.pumps;
     }
-
     public void setPumps(List<Pump> pumps){
         levelInfo.pumps = pumps;
     }
 
-    public void changeThing(int count){
-        characteristics.setCurrentThing(count);
+    public int getThingInHand(){
+        return characteristics.thingInHand;
+    }
+    public void setThingInHand(int thing){
+        characteristics.thingInHand = thing;
     }
 }
