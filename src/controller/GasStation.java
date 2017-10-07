@@ -5,7 +5,7 @@ import graphics.frames.LevelSelection;
 import graphics.frames.MainFrame;
 import model.GameProgress;
 import model.Pump;
-import model.XMLParser.*;
+import model.XMLParser.XMLFile;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -22,10 +22,6 @@ public class GasStation {
     public GasStation(){
         view = new MainFrame(this);
         model = new GameProgress();
-    }
-
-    public void disposeFrame(){
-        view.disposeFrame();
     }
 
     public void showLevelScreen(){
@@ -88,5 +84,8 @@ public class GasStation {
 
     public void freezeFrame(boolean isFreeze){
         view.freezeFrame(isFreeze);
+    }
+    public void disposeFrame(){
+        view.disposeFrame();
     }
 }

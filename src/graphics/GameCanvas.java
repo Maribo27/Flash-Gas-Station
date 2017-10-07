@@ -23,14 +23,14 @@ import static graphics.consts.Consts.*;
  */
 public class GameCanvas implements Runnable {
 
-	private GasStation controller;
+    private GasStation controller;
 
 	Canvas canvas = new Canvas();
 
 	private int newPosition;
     private int cord_X = 0;
 
-    private List<Integer> coordsOfPumps = new ArrayList<>();
+    private List<Integer> pumpsCoordinates = new ArrayList<>();
 
 	private boolean isThing = false;
 	private boolean running;
@@ -78,7 +78,7 @@ public class GameCanvas implements Runnable {
         pump = getImage(Consts.PUMP.toString());
         car = getImage(Consts.CAR.toString());
 		for (int count = 0; count < 5; count++){
-			coordsOfPumps.add(20 + (60 + pump.getWidth()) * count);
+			pumpsCoordinates.add(PUMP_BORDER + (DIMENSION_BETWEEN_PUMPS + pump.getWidth()) * count);
 		}
 	}
 	
@@ -96,16 +96,18 @@ public class GameCanvas implements Runnable {
 
 		background.draw(g, 0, 0);
 		for (int count = 0; count < controller.getCountOfPumps(); count++){
-			pump.draw(g, coordsOfPumps.get(count), 230);
+			pump.draw(g, pumpsCoordinates.get(count), PUMP_Y_LEVEL);
 		}
 
 		List<Pump> pumpList = controller.getPumps();
 
 		for (int countPump = 0; countPump < pumpList.size(); countPump++){
 			if (!pumpList.get(countPump).isFree()) {
-				car.draw(g, 20 + (60 + car.getWidth()) * countPump, 430);
+                int tempX = PUMP_BORDER + (DIMENSION_BETWEEN_PUMPS + car.getWidth()) * countPump;
+                car.draw(g, tempX, CAR_Y_LEVEL);
 				if (!pumpList.get(countPump).isHaveThing()) {
-                    things.get(pumpList.get(countPump).getThingToBuy()).draw(g, 20 + (60 + car.getWidth()) * countPump, 400);
+				    ImageDraw imageDraw = things.get(pumpList.get(countPump).getThingToBuy());
+                    imageDraw.draw(g, tempX, ORDERED_THINGS_Y_LEVEL);
                 }
 			}
 
@@ -118,12 +120,14 @@ public class GameCanvas implements Runnable {
         }
 
 		if (isThing) {
-            things.get(thingInHand).draw(g, cord_X, Consts.CORD_Y + 50);
+            things.get(thingInHand).draw(g, cord_X, THINGS_Y_LEVEL);
         }
         for (int pumpNumber = 0; pumpNumber < controller.getCountOfPumps(); pumpNumber++){
-            boolean pumpPressed = newPosition > coordsOfPumps.get(pumpNumber) && cord_X > coordsOfPumps.get(pumpNumber) &&
-                    newPosition < coordsOfPumps.get(pumpNumber) + pump.getWidth() && cord_X < coordsOfPumps.get(pumpNumber) + pump.getWidth() &&
-                    controller.getThingInHand() == pumpList.get(pumpNumber).getThingToBuy();
+            boolean pumpPressed = newPosition > pumpsCoordinates.get(pumpNumber)
+                    && cord_X > pumpsCoordinates.get(pumpNumber)
+                    && newPosition < pumpsCoordinates.get(pumpNumber) + pump.getWidth()
+                    && cord_X < pumpsCoordinates.get(pumpNumber) + pump.getWidth()
+                    && controller.getThingInHand() == pumpList.get(pumpNumber).getThingToBuy();
 
             if (pumpPressed){
                 isThing = false;

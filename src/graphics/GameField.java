@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
 
+import static graphics.consts.Consts.*;
+import static graphics.consts.Consts.STORE_COORDINATES;
+
 /**
  * Created by Maria on 09.09.2017.
  */
@@ -21,8 +24,8 @@ public class GameField {
 
     private JPanel frame;
     private JPanel shopPanel;
-    private JPanel mainPanel;
-    private JPanel topPanel;
+    private JPanel carPanel;
+    private JPanel informationPanel;
 
     private GasStation controller;
 
@@ -50,8 +53,6 @@ public class GameField {
     private JButton pauseButton;
 
 
-
-
     public GameField(GasStation controller){
         this.controller = controller;
         this.level = controller.getCurrentLevel();
@@ -67,7 +68,7 @@ public class GameField {
     }
 
     private void initFrame(){
-        frame = new Background(Consts.GAME_BACKGROUND);
+        frame = new Background(GAME_BACKGROUND);
         frame.setLayout(new BorderLayout());
         frame.setSize(new Dimension(1200,700));
         frame.setVisible(true);
@@ -81,33 +82,33 @@ public class GameField {
 
         shopPanel = new JPanel();
         shopPanel.setLayout(new FlowLayout());
-        shopPanel.setSize(new Dimension(125,675));
-        shopPanel.setPreferredSize(new Dimension(125,675));
-        shopPanel.setMinimumSize(new Dimension(125,675));
+        shopPanel.setSize(new Dimension(125, CAR_PANEL_HEIGHT));
+        shopPanel.setPreferredSize(new Dimension(125, CAR_PANEL_HEIGHT));
+        shopPanel.setMinimumSize(new Dimension(125, CAR_PANEL_HEIGHT));
         shopPanel.add(new JLabel("Магазин:"));
 
         batarang = new JButton(new ImageIcon(Thing.BATARANG));
         batarang.addActionListener(e -> {
             controller.setThingInHand(1);
-            gameCanvas.changePosition(-104);
+            gameCanvas.changePosition(STORE_COORDINATES);
         });
         batarang.setContentAreaFilled(false);
         steeringWheel = new JButton(new ImageIcon(Thing.STEERING_WHEEL));
         steeringWheel.addActionListener(e -> {
             controller.setThingInHand(2);
-            gameCanvas.changePosition(-104);
+            gameCanvas.changePosition(STORE_COORDINATES);
         });
         steeringWheel.setContentAreaFilled(false);
         fastFood = new JButton(new ImageIcon(Thing.FASTFOOD));
         fastFood.addActionListener(e -> {
             controller.setThingInHand(3);
-            gameCanvas.changePosition(-104);
+            gameCanvas.changePosition(STORE_COORDINATES);
         });
         fastFood.setContentAreaFilled(false);
         coffee = new JButton(new ImageIcon(Thing.COFFEE));
         coffee.addActionListener(e -> {
             controller.setThingInHand(4);
-            gameCanvas.changePosition(-104);
+            gameCanvas.changePosition(STORE_COORDINATES);
         });
         coffee.setContentAreaFilled(false);
 
@@ -118,13 +119,13 @@ public class GameField {
         shopPanel.setOpaque(false);
     }
     private void initCars(){
-        mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setSize(new Dimension(150,675));
-        mainPanel.setPreferredSize(new Dimension(150,675));
-        mainPanel.setMinimumSize(new Dimension(150,675));
-        mainPanel.add(new JLabel("Очередь машин:"));
-        mainPanel.setOpaque(false);
+        carPanel = new JPanel();
+        carPanel.setLayout(new BoxLayout(carPanel, BoxLayout.Y_AXIS));
+        carPanel.setSize(new Dimension(CAR_PANEL_WIDTH, CAR_PANEL_HEIGHT));
+        carPanel.setPreferredSize(new Dimension(CAR_PANEL_WIDTH, CAR_PANEL_HEIGHT));
+        carPanel.setMinimumSize(new Dimension(CAR_PANEL_WIDTH, CAR_PANEL_HEIGHT));
+        carPanel.add(new JLabel("Очередь машин:"));
+        carPanel.setOpaque(false);
 
         JPanel carsPanel = new JPanel();
         carsPanel.setLayout(new BoxLayout(carsPanel, BoxLayout.Y_AXIS));
@@ -138,7 +139,7 @@ public class GameField {
             carCounter[car] = car;
         }
         for (int car : carCounter){
-            JButton button = new JButton("" + car, Consts.CAR);
+            JButton button = new JButton("" + car, CAR);
             button.setEnabled(true);
             button.setContentAreaFilled(false);
 
@@ -169,7 +170,8 @@ public class GameField {
 
         timer = new Timer(1000, e -> {
             seconds++;
-            if (timeCount < controller.getCarNumbers() && (seconds % controller.getSpeed() == 0 || seconds == 1)) {
+            boolean canAddCar = timeCount < controller.getCarNumbers() && (seconds % controller.getSpeed() == 0 || seconds == 1);
+            if (canAddCar) {
                 carList.add(new Car());
                 carsPanel.add(cars.get(timeCount));
                 carsPanel.revalidate();
@@ -212,11 +214,13 @@ public class GameField {
             }
             controller.setPumps(pumpList);
 
-            if (cars.size() == 0 && isReady) {
+            boolean levelStop = cars.size() == 0 && isReady;
+            if (levelStop) {
                     timer.stop();
                     String state;
 
-                    if (controller.getBalance() > controller.getGoal()){
+                boolean levelComplete = controller.getBalance() > controller.getGoal();
+                if (levelComplete){
                         state = "О да, Флэш быстр как никогда";
                         increaseLevel = 1;
                     } else {
@@ -230,15 +234,15 @@ public class GameField {
         carsPanel.setOpaque(false);
         scrollCarPanel.setOpaque(false);
         scrollCarPanel.getViewport().setOpaque(false);
-        mainPanel.add(scrollCarPanel);
+        carPanel.add(scrollCarPanel);
     }
 
     private void initInformation(){
         JLabel levelLabel;
 
-        topPanel = new JPanel();
-        topPanel.setLayout(new FlowLayout());
-        topPanel.setSize(new Dimension(1024,150));
+        informationPanel = new JPanel();
+        informationPanel.setLayout(new FlowLayout());
+        informationPanel.setSize(new Dimension(INFORMATION_PANEL_WIDTH, INFORMATION_PANEL_HEIGHT));
 
 
         levelLabel = new JLabel("Уровень: " + level);
@@ -265,18 +269,18 @@ public class GameField {
             pauseFrame.add(okButton);
         });
 
-        topPanel.add(levelLabel);
-        topPanel.add(goalLabel);
-        topPanel.add(pauseButton);
-        topPanel.setOpaque(false);
+        informationPanel.add(levelLabel);
+        informationPanel.add(goalLabel);
+        informationPanel.add(pauseButton);
+        informationPanel.setOpaque(false);
     }
 
     private void initPanels(){
         initCars();
         initInformation();
         initStore();
-        frame.add(mainPanel, BorderLayout.EAST);
-        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(carPanel, BorderLayout.EAST);
+        frame.add(informationPanel, BorderLayout.NORTH);
         frame.add(shopPanel, BorderLayout.WEST);
     }
 
@@ -285,17 +289,17 @@ public class GameField {
     }
 
     private void updateState(){
-        topPanel.remove(goalLabel);
-        topPanel.remove(carLabel);
-        topPanel.remove(pauseButton);
+        informationPanel.remove(goalLabel);
+        informationPanel.remove(carLabel);
+        informationPanel.remove(pauseButton);
 
         goalLabel = new JLabel("Цель: " + controller.getBalance() + "/" + controller.getGoal() + "$");
         carLabel = new JLabel("Машин прошло: " + carServed + "/" + controller.getCarNumbers());
-        topPanel.add(goalLabel);
-        topPanel.add(carLabel);
-        topPanel.add(pauseButton);
-        topPanel.repaint();
-        topPanel.revalidate();
+        informationPanel.add(goalLabel);
+        informationPanel.add(carLabel);
+        informationPanel.add(pauseButton);
+        informationPanel.repaint();
+        informationPanel.revalidate();
         frame.repaint();
         frame.revalidate();
     }

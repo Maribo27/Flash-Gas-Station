@@ -7,6 +7,8 @@ import graphics.images.Background;
 import javax.swing.*;
 import java.awt.*;
 
+import static graphics.consts.Consts.*;
+
 /**
  * Created by Maria on 09.09.2017.
  */
@@ -16,12 +18,12 @@ public class MainFrame {
 
     public MainFrame(GasStation controller){
         framePanel = new JPanel();
-        framePanel = new Background(Consts.MAIN_BACKGROUND);
+        framePanel = new Background(MAIN_BACKGROUND);
 
         frame = new JFrame("Супергеройская АЗС");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-        frame.setSize(new Dimension(565,825));
+        frame.setSize(new Dimension(MAIN_MENU_WIDTH, MAIN_MENU_HEIGHT));
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setAlwaysOnTop(true);
@@ -36,7 +38,7 @@ public class MainFrame {
             JLabel information = new JLabel("<html><b>Здесь будет помощь и об авторе инфа:)</b></html>");
             helpFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             helpFrame.setLayout(new BorderLayout());
-            helpFrame.setSize(new Dimension(100,100));
+            helpFrame.setSize(new Dimension(HELP_BORDER, HELP_BORDER));
             helpFrame.setLocationRelativeTo(null);
             helpFrame.add(information);
             helpFrame.setAlwaysOnTop(true);

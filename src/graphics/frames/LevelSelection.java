@@ -6,7 +6,9 @@ import graphics.images.Background;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class LevelSelection {
     private int currentLevel;
@@ -20,7 +22,7 @@ public class LevelSelection {
     public JPanel getLevelPanel(){
         levelPanel = new Background(Consts.GAME_BACKGROUND);
         levelPanel.setLayout(new GridLayout(2,3));
-        levelPanel.setSize(new Dimension(1200,700));
+        levelPanel.setSize(new Dimension(Consts.LEVEL_PANEL_WIDTH, Consts.LEVEL_PANEL_HEIGHT));
         initLevels();
         return levelPanel;
     }
