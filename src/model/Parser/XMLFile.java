@@ -1,6 +1,7 @@
-package model.XMLParser;
+package model.Parser;
 
 import controller.GasStation;
+import model.Level;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -14,6 +15,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 public class XMLFile {
@@ -25,18 +27,28 @@ public class XMLFile {
         this.fileName = fileName;
         this.controller = controller;
     }
-    
+
     public void writeFile() throws IOException, TransformerException, ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
         Document doc = builder.newDocument();
 
-        Element mainElement = doc.createElement(XMLConst.STATE);
+        Element mainElement = doc.createElement(XMLConst.LEVEL_INFO);
         doc.appendChild(mainElement);
+        mainElement.setAttribute(XMLConst.CURRENT_LEVEL, controller.getCurrentLevel() + "");
 
-        Element newElem = doc.createElement(XMLConst.CURRENT);
-        mainElement.appendChild(newElem);
-        newElem.setAttribute(XMLConst.LEVEL, controller.getCurrentLevel() + "");
+        List<Level> levels = controller.getLevels();
+
+        for (Level level : levels) {
+            Element newElem = doc.createElement(XMLConst.LEVEL_DATA);
+            mainElement.appendChild(newElem);
+            newElem.setAttribute(XMLConst.LEVEL_NAME, level.getLevelNumber() + "");
+            newElem.setAttribute(XMLConst.COUNT_OF_CARS, level.getCountOfCars() + "");
+            newElem.setAttribute(XMLConst.COUNT_OF_PUMPS, level.getCountOfPumps() + "");
+            newElem.setAttribute(XMLConst.GOAL, level.getGoal() + "");
+            newElem.setAttribute(XMLConst.SPEED, level.getSpeed() + "");
+            newElem.setAttribute(XMLConst.COEFFICIENT, level.getCoefficient() + "");
+        }
 
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer();
@@ -56,8 +68,12 @@ public class XMLFile {
             saxParser.parse(new File(fileName), statFileHandler);
 
             int currentLevel = statFileHandler.getCurrentLevel();
-            if (currentLevel < 1) currentLevel = 1;
+            List<Level> levels = statFileHandler.getLevels();
+            if (currentLevel > levels.size()) {
+                currentLevel = levels.size();
+            }
             controller.setSavedLevel(currentLevel);
+            controller.createLevels(levels);
         } catch (SAXException | ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
