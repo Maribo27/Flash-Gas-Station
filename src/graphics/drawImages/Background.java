@@ -1,4 +1,4 @@
-package graphics.images;
+package graphics.drawImages;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

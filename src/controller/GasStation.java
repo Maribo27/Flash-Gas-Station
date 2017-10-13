@@ -1,31 +1,38 @@
 package controller;
 
 import graphics.GameField;
-import graphics.frames.LevelSelection;
-import graphics.frames.MainFrame;
+import graphics.LevelSelection;
+import graphics.MainFrame;
 import model.GameProgress;
+import model.Level;
+import model.Parser.XMLFile;
 import model.Pump;
-import model.XMLParser.XMLFile;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.List;
 
+import static graphics.Constants.EXIT_WITH_ERROR;
+
 /**
  * Created by Maria on 09.09.2017.
  */
 public class GasStation {
+    private static final String DB_LEVEL_INFORMATION_XML = "db\\levelInformation.xml";
+
     private MainFrame view;
+
     private GameProgress model;
 
     public GasStation(){
         view = new MainFrame(this);
         model = new GameProgress();
+        new XMLFile(DB_LEVEL_INFORMATION_XML, this).readFile();
     }
 
     public void showLevelScreen(){
-        new XMLFile("db\\level.xml", this).readFile();
+        model.nullBalance();
         LevelSelection levelSelection = new LevelSelection(model.getSavedLevel(), this);
         view.changeFrame(levelSelection.getLevelPanel());
     }
@@ -47,16 +54,30 @@ public class GasStation {
     public int getCurrentLevel(){
         return model.getCurrentLevel();
     }
-    public void changeLevel(int level){
-        model.nullBalance();
-        model.setLevel(level);
 
-        if (level > model.getSavedLevel()) {
+    public void levelUp(){
+        model.levelUp();
+
+        if (model.getCurrentLevel() > model.getSavedLevel()) {
+            setSavedLevel(model.getCurrentLevel());
             try {
-                new XMLFile("db\\level.xml", this).writeFile();
+                new XMLFile(DB_LEVEL_INFORMATION_XML, this).writeFile();
             } catch (IOException | TransformerException | ParserConfigurationException e) {
-                e.printStackTrace();
+                System.out.println("Невозможно прочитать базу данных, приложение будет закрыто.");
+                System.exit(EXIT_WITH_ERROR);
             }
+        }
+    }
+
+    public void newGame(){
+        model.nullBalance();
+        model.setLevel(1);
+        setSavedLevel(1);
+        try {
+            new XMLFile(DB_LEVEL_INFORMATION_XML, this).writeFile();
+        } catch (IOException | TransformerException | ParserConfigurationException e) {
+            System.out.println("Невозможно прочитать базу данных, приложение будет закрыто");
+            System.exit(-1);
         }
     }
 
@@ -86,5 +107,20 @@ public class GasStation {
     }
     public void disposeFrame(){
         view.disposeFrame();
+    }
+
+    public void createLevels(List<Level> levels){
+        model.createLevels(levels);
+    }
+    public List<Level> getLevels(){
+        return model.getLevels();
+    }
+
+    public int getLevelNumbers() {
+        return model.getLevelNumbers();
+    }
+
+    public Level getNextLevel(){
+        return model.getNextLevel();
     }
 }

@@ -1,4 +1,4 @@
-package graphics.images;
+package graphics.drawImages;
 
 import java.awt.*;
 
@@ -17,6 +17,6 @@ public class ImageDraw {
     }
 
     public void draw(Graphics g, int x, int y) {
-        g.drawImage(image,x,y,null);
+        g.drawImage(image, x, y, null);
     }
 }

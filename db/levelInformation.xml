@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<levelInfo currentLevel="5">
+<levelData coefficient="2" countOfCars="5" countOfPumps="1" goal="200" levelName="1" speed="10"/>
+<levelData coefficient="4" countOfCars="10" countOfPumps="2" goal="400" levelName="2" speed="7"/>
+<levelData coefficient="6" countOfCars="15" countOfPumps="2" goal="500" levelName="3" speed="7"/>
+<levelData coefficient="8" countOfCars="20" countOfPumps="3" goal="700" levelName="4" speed="5"/>
+<levelData coefficient="10" countOfCars="25" countOfPumps="4" goal="800" levelName="5" speed="5"/>
+</levelInfo>
